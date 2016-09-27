@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 /**
@@ -15,8 +16,8 @@ import android.view.View;
 public class MyRadar extends View {
     private int count=6;  //六边形，数据个数6
     private float angle= (float) (Math.PI/3);
-    private double[] data={100,60,60,60,100,50,10,20}; //
-    private double maxValue=100;
+    private double[] data={100,60,60,100,50,100,20}; //
+    private float maxValue=100;
     private String[] titles={"发球","经验","防守","技巧","速度","力量"};
 
     private Paint radarPaint;
@@ -34,12 +35,34 @@ public class MyRadar extends View {
     }
 
     public MyRadar(Context context, AttributeSet attrs) {
-        this(context, null,0);
+        this(context, attrs,0);
     }
 
     public MyRadar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if(widthSpecMode==MeasureSpec.AT_MOST&&heightSpecMode==MeasureSpec.AT_MOST){
+            setMeasuredDimension(sp2px(300),sp2px(300));
+        }
+        else if (widthMeasureSpec==MeasureSpec.AT_MOST){
+            setMeasuredDimension(sp2px(250),heightSpecSize);
+        }else if (heightSpecMode==MeasureSpec.AT_MOST){
+            setMeasuredDimension(widthMeasureSpec,sp2px(250));
+        }
+
+
     }
 
     @Override
@@ -64,7 +87,7 @@ public class MyRadar extends View {
         valuePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         textPaint = new Paint();
-        textPaint.setTextSize(15);
+        textPaint.setTextSize(sp2px(15));
         textPaint.setAntiAlias(true);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.BLACK);
@@ -74,8 +97,31 @@ public class MyRadar extends View {
     protected void onDraw(Canvas canvas) {
         drawHexagon(canvas);
         drawText(canvas);
+        drawRegion(canvas);
     }
 
+    private void drawRegion(Canvas canvas) {
+        Path path = new Path();
+        valuePaint.setAlpha(255);
+        for(int i=0;i<count;i++){
+            double percent = data[i]/maxValue;
+            float x = (float) (centerX+radius*Math.cos(angle*i)*percent);
+            float y = (float) (centerY+radius*Math.sin(angle*i)*percent);
+            if(i==0){
+                path.moveTo(x, centerY);
+            }else{
+                path.lineTo(x,y);
+            }
+            //绘制小圆点
+            canvas.drawCircle(x,y,5,valuePaint);
+        }
+        valuePaint.setStyle(Paint.Style.STROKE);
+        canvas.drawPath(path, valuePaint);
+        valuePaint.setAlpha(127);
+        //绘制填充区域
+        valuePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        canvas.drawPath(path, valuePaint);
+    }
 
 
     private void drawHexagon(Canvas canvas) {
@@ -125,26 +171,57 @@ public class MyRadar extends View {
                 canvas.drawText(titles[i], x,y,textPaint);
             }else if(angle*i>Math.PI/2&&angle*i<=Math.PI){
 
-                float dis = textPaint.measureText(titles[i]);//文本长度
+                float dis = textPaint.measureText(titles[i]);
                 canvas.drawText(titles[i], x-dis,y+fontHeight/2,textPaint);
             }else if(angle*i>=Math.PI&&angle*i<3*Math.PI/2){
-                float dis = textPaint.measureText(titles[i]);//文本长度
+                float dis = textPaint.measureText(titles[i]);
                 canvas.drawText(titles[i], x-dis,y,textPaint);
             }
-           /* if (angle*i>=0&&angle*i<=Math.PI/2){
-                canvas.drawText(titles[i],x,y,textPaint);
-            }
-            else if (angle*i>Math.PI/2&&angle*i<=Math.PI){
-                float length=textPaint.measureText(titles[i]);
-                canvas.drawText(titles[i],x-length,y,textPaint);
-            }
-            else if(angle*i>=Math.PI&&angle*i<3*Math.PI/2){
-                float length=textPaint.measureText(titles[i]);
-                canvas.drawText(titles[i],x-length,y+fontHeight,textPaint);
-            }
-            else{
-                canvas.drawText(titles[i],x,y+fontHeight,textPaint);
-            }*/
+
         }
     }
+
+
+    //设置标题
+    public void setTitles(String[] titles) {
+        this.titles = titles;
+    }
+
+    //设置数值
+    public void setData(double[] data) {
+        this.data = data;
+    }
+
+
+    public float getMaxValue() {
+        return maxValue;
+    }
+
+    //设置最大数值
+    public void setMaxValue(float maxValue) {
+        this.maxValue = maxValue;
+    }
+    //设置标题颜色
+    public void setTextPaintColor(int color){
+        textPaint.setColor(color);
+    }
+
+    //设置覆盖局域颜色
+    public void setValuePaintColor(int color){
+        valuePaint.setColor(color);
+
+    }
+    //设置雷达图颜色
+    public void setMainPaintColor(int color){
+        radarPaint.setColor(color);
+    }
+
+
+    private int dp2px(int dp){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+    //sp转px单位
+    private int sp2px(int sp){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
+}
 }

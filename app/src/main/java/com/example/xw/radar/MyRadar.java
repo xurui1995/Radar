@@ -15,14 +15,14 @@ import android.view.View;
  */
 public class MyRadar extends View {
     private int count=6;  //六边形，数据个数6
-    private float angle= (float) (Math.PI/3);
-    private double[] data={50,50,50,50,50,50,50}; //
-    private float maxValue=100;
-    private String[] titles={"a","b","c","d","e","f"};
+    private float angle= (float) (Math.PI/3);  //60度
+    private double[] data={50,50,50,50,50,50,50}; //默认数据
+    private float maxValue=100;     //默认最大值
+    private String[] titles={"a","b","c","d","e","f"};  //默认标题
 
-    private Paint radarPaint;
-    private  Paint valuePaint;
-    private Paint textPaint;
+    private Paint radarPaint;                //蜘蛛网画笔
+    private  Paint valuePaint;               //内容区画笔
+    private Paint textPaint;                 //文字画笔
 
     private float radius;                   //网格最大半径
     private int centerX;                  //中心X
@@ -59,8 +59,6 @@ public class MyRadar extends View {
         }else if (heightSpecMode==MeasureSpec.AT_MOST){
             setMeasuredDimension(widthSpecSize,sp2px(250));
         }
-
-
     }
 
     @Override
@@ -70,7 +68,7 @@ public class MyRadar extends View {
         centerY = h/2;
         postInvalidate();
         super.onSizeChanged(w, h, oldw, oldh);
-        super.onSizeChanged(w, h, oldw, oldh);
+
     }
 
     private void init() {

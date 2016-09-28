@@ -1,7 +1,8 @@
 # Radar
 雷达图
-###效果图
-![](http://p1.bqimg.com/567571/de305a54cc7cbef3.png)  
+###效果图  
+![](http://p1.bqimg.com/4851/de305a54cc7cbef3.png)  
+
 ##提供方法  
 ```
  //设置标题

@@ -16,9 +16,9 @@ import android.view.View;
 public class MyRadar extends View {
     private int count=6;  //六边形，数据个数6
     private float angle= (float) (Math.PI/3);
-    private double[] data={100,60,60,100,50,100,20}; //
+    private double[] data={50,50,50,50,50,50,50}; //
     private float maxValue=100;
-    private String[] titles={"发球","经验","防守","技巧","速度","力量"};
+    private String[] titles={"a","b","c","d","e","f"};
 
     private Paint radarPaint;
     private  Paint valuePaint;

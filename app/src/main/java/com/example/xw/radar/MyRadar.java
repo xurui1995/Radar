@@ -31,9 +31,7 @@ public class MyRadar extends View {
 
     public MyRadar(Context context) {
         this(context,null);
-
     }
-
     public MyRadar(Context context, AttributeSet attrs) {
         this(context, attrs,0);
     }
@@ -59,7 +57,7 @@ public class MyRadar extends View {
         else if (widthMeasureSpec==MeasureSpec.AT_MOST){
             setMeasuredDimension(sp2px(250),heightSpecSize);
         }else if (heightSpecMode==MeasureSpec.AT_MOST){
-            setMeasuredDimension(widthMeasureSpec,sp2px(250));
+            setMeasuredDimension(widthSpecSize,sp2px(250));
         }
 
 

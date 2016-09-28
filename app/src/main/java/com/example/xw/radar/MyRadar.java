@@ -167,16 +167,17 @@ public class MyRadar extends View {
 
             if(angle*i>=0&&angle*i<=Math.PI/2){
                 canvas.drawText(titles[i], x,y+fontHeight/2,textPaint);
-            }else if(angle*i>=3*Math.PI/2&&angle*i<=Math.PI*2){
-                canvas.drawText(titles[i], x,y,textPaint);
-            }else if(angle*i>Math.PI/2&&angle*i<=Math.PI){
-
+            } else if(angle*i>Math.PI/2&&angle*i<=Math.PI){
                 float dis = textPaint.measureText(titles[i]);
                 canvas.drawText(titles[i], x-dis,y+fontHeight/2,textPaint);
-            }else if(angle*i>=Math.PI&&angle*i<3*Math.PI/2){
+            }
+            else if(angle*i>=Math.PI&&angle*i<3*Math.PI/2){
                 float dis = textPaint.measureText(titles[i]);
                 canvas.drawText(titles[i], x-dis,y,textPaint);
+            }else if(angle*i>=3*Math.PI/2&&angle*i<=Math.PI*2){
+                canvas.drawText(titles[i], x,y,textPaint);
             }
+
 
         }
     }
